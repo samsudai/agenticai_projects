@@ -1,0 +1,7 @@
+langchain
+langchain_openai
+fastapi
+uvicorn
+langserve
+sse_starlette
+python-dotenv

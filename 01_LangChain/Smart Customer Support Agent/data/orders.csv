@@ -1,0 +1,6 @@
+Order ID,Order Details
+ORD1001,"Delayed order"
+ORD1002,"Delivered order"  
+ORD1003,"Returned order with refund pending"
+ORD1004,"Processing order"
+ORD1005,"Delivered damaged product"
