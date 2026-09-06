@@ -1,0 +1,849 @@
+{
+  "name": "Jerry - IST",
+  "nodes": [
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.4,
+      "position": [
+        -368,
+        -208
+      ],
+      "id": "aa166661-3f8f-4eef-a278-eca3f3fa1887",
+      "name": "When chat message received",
+      "webhookId": "3093561a-612e-440e-a858-50bee21b8a84"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-5-mini"
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.3,
+      "position": [
+        -144,
+        224
+      ],
+      "id": "f6ebc5d9-5f87-41dc-a70a-c2b706bdbf14",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "psBrm3IPkORWNzIs",
+          "name": "OpenAi Dileep"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        -16,
+        224
+      ],
+      "id": "bc7e3897-65b5-44ec-bb97-2ce1f07421a0",
+      "name": "Simple Memory"
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('To', ``, 'string') }}",
+        "subject": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Subject', ``, 'string') }}",
+        "emailType": "text",
+        "message": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Message', ``, 'string') }}",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.gmailTool",
+      "typeVersion": 2.2,
+      "position": [
+        112,
+        224
+      ],
+      "id": "ae8c5b37-22f4-43e2-a18d-08de84856881",
+      "name": "send email",
+      "webhookId": "a1a2f3f7-7060-4f73-9e8f-901dd153136e",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "NFsqls2f6tH2NqLn",
+          "name": "Akhil - Techie Account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "getAll",
+        "returnAll": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Return_All', ``, 'boolean') }}",
+        "filters": {}
+      },
+      "type": "n8n-nodes-base.gmailTool",
+      "typeVersion": 2.2,
+      "position": [
+        240,
+        224
+      ],
+      "id": "d3ea0231-fdf5-4eee-aad5-36085a1ffdc3",
+      "name": "read emails",
+      "webhookId": "a1a2f3f7-7060-4f73-9e8f-901dd153136e",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "NFsqls2f6tH2NqLn",
+          "name": "Akhil - Techie Account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "draft",
+        "subject": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Subject', ``, 'string') }}",
+        "message": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Message', ``, 'string') }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmailTool",
+      "typeVersion": 2.2,
+      "position": [
+        368,
+        224
+      ],
+      "id": "aeaa4ce8-0ad8-476b-9c37-ef3f42512dba",
+      "name": "draft email",
+      "webhookId": "a1a2f3f7-7060-4f73-9e8f-901dd153136e",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "NFsqls2f6tH2NqLn",
+          "name": "Akhil - Techie Account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "delete",
+        "messageId": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Message_ID', ``, 'string') }}"
+      },
+      "type": "n8n-nodes-base.gmailTool",
+      "typeVersion": 2.2,
+      "position": [
+        496,
+        224
+      ],
+      "id": "0fb517f1-de9d-4237-aa7b-927867847547",
+      "name": "delete email",
+      "webhookId": "a1a2f3f7-7060-4f73-9e8f-901dd153136e",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "NFsqls2f6tH2NqLn",
+          "name": "Akhil - Techie Account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "reply",
+        "messageId": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Message_ID', ``, 'string') }}",
+        "emailType": "text",
+        "message": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Message', ``, 'string') }}",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.gmailTool",
+      "typeVersion": 2.2,
+      "position": [
+        624,
+        224
+      ],
+      "id": "de9a53cb-00aa-4708-b462-e7f958c1b4ae",
+      "name": "reply email",
+      "webhookId": "a1a2f3f7-7060-4f73-9e8f-901dd153136e",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "NFsqls2f6tH2NqLn",
+          "name": "Akhil - Techie Account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-5-mini"
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.3,
+      "position": [
+        -96,
+        16
+      ],
+      "id": "15effb82-30da-44ee-95b7-3c02bc32eae6",
+      "name": "OpenAI Chat Model1",
+      "credentials": {
+        "openAiApi": {
+          "id": "psBrm3IPkORWNzIs",
+          "name": "OpenAi Dileep"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        32,
+        16
+      ],
+      "id": "46e5a005-c638-4615-a933-363e81126637",
+      "name": "Simple Memory1"
+    },
+    {
+      "parameters": {
+        "options": {
+          "systemMessage": "You are a master orchestrator, do the following -\n\n1. If the user query is related to email, delegate it to email agent tool\n2. If the user query is related to calendar, delegate it to calendar agent tool\n3. If the user query is related to meetings, delegate it to meetings agent tool\n4. If the user query involves two or more agents, figure out the sequence of agents to called upon and ensure the \ncross communication to successfully resolve the user query. "
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        176,
+        -208
+      ],
+      "id": "0a3d0410-a9eb-48d8-b9dd-f96cdf846439",
+      "name": "Master Orchestrator"
+    },
+    {
+      "parameters": {
+        "text": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Prompt__User_Message_', ``, 'string') }}",
+        "options": {
+          "systemMessage": "You are an email assistant who does all things email, follow the instructions below -\n\n1. If the user asks to either send or compose an email, use send email tool\n2. If the user asks to read or get many emails, use read emails tool\n3. If the user asks to create or draft an email, use draft email tool\n4. If the user asks to either delete or reply to an email, do the following -\n    a. First, use read emails tool to find the email in focus. \n    b. Second, extract the message ID for the email in focus and use it appropriately in either delete or reply tool\n\nUse the following signature whenever you compose, draft or reply -\nYours truly, \nAKA"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agentTool",
+      "typeVersion": 3,
+      "position": [
+        160,
+        16
+      ],
+      "id": "04f4dddc-565f-4803-b950-c2bf4995b2ee",
+      "name": "Email Agent tool"
+    },
+    {
+      "parameters": {
+        "text": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Prompt__User_Message_', ``, 'string') }}",
+        "options": {
+          "systemMessage": "You are an calendar assistant who does all things cal, follow the instructions below -\n\nBefore you perform any action, always fetch the currentDate from date & time tool. \n\n1. If the user asks to either create or schedule an event, use create event tool\n2. If the user asks to read or get many events, use get events tool\n3. If the user asks to check availability, use check availability tool\n4. If the user asks to either delete or update an event, do the following -\n    a. First, use get events tool to find the event in focus. \n    b. Second, extract the event ID for the event in focus and use it appropriately in either delete or update tool"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agentTool",
+      "typeVersion": 3,
+      "position": [
+        1120,
+        16
+      ],
+      "id": "aa3daa0b-8e79-4140-a38a-f24ff0a64211",
+      "name": "Calendar Agent"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-5-mini"
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.3,
+      "position": [
+        752,
+        224
+      ],
+      "id": "49d9b932-c8a6-41fb-b2e3-7ad813125814",
+      "name": "OpenAI Chat Model2",
+      "credentials": {
+        "openAiApi": {
+          "id": "psBrm3IPkORWNzIs",
+          "name": "OpenAi Dileep"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        880,
+        224
+      ],
+      "id": "971efab9-1bbc-4ab7-be9b-eee41eca62cb",
+      "name": "Simple Memory2"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-5-mini"
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.3,
+      "position": [
+        1776,
+        224
+      ],
+      "id": "c25c1e3d-16e3-4677-8704-cdb8dfa77fc0",
+      "name": "OpenAI Chat Model3",
+      "credentials": {
+        "openAiApi": {
+          "id": "psBrm3IPkORWNzIs",
+          "name": "OpenAi Dileep"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        1904,
+        224
+      ],
+      "id": "b382fa36-dbce-4dfe-bb82-e0c5764463e7",
+      "name": "Simple Memory3"
+    },
+    {
+      "parameters": {
+        "text": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Prompt__User_Message_', ``, 'string') }}",
+        "options": {
+          "systemMessage": "You are a Meeting assistant who does all things meetings.\n\nAlways follow these steps to fetch the transcript needed for user query -\n\n1. Use the transcripts tool to fetch all the transcripts. \n2. Extract the transcript ID of the meeting in focus from the response\n3. Use the transcript ID in the transcript tool (API call) as follows -\n\n\"{\n  \"query\": \"query($id: String!) { transcript(id: $id) { title sentences { speaker_name text } meeting_attendees { displayName email } } }\",\n  \"variables\": {\n    \"id\": \"EXTRACTED_ID_FROM_TRANSCRIPTS_TOOL\"\n  }\n}\"\n\n"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agentTool",
+      "typeVersion": 3,
+      "position": [
+        2000,
+        16
+      ],
+      "id": "8865426e-ffc2-489e-830a-f015c9ecbb05",
+      "name": "Meetings Agent"
+    },
+    {
+      "parameters": {
+        "calendar": {
+          "__rl": true,
+          "value": "akhi.the.techie@gmail.com",
+          "mode": "list",
+          "cachedResultName": "akhi.the.techie@gmail.com"
+        },
+        "start": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Start', ``, 'string') }}",
+        "end": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('End', ``, 'string') }}",
+        "additionalFields": {
+          "description": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Description', ``, 'string') }}",
+          "summary": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Summary', ``, 'string') }}"
+        }
+      },
+      "type": "n8n-nodes-base.googleCalendarTool",
+      "typeVersion": 1.3,
+      "position": [
+        1008,
+        224
+      ],
+      "id": "42e701c9-310e-4641-995e-916cfc07637a",
+      "name": "create event",
+      "credentials": {
+        "googleCalendarOAuth2Api": {
+          "id": "VQrikKebXzEgtSPB",
+          "name": "Akhil's calendar"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "getAll",
+        "calendar": {
+          "__rl": true,
+          "value": "akhi.the.techie@gmail.com",
+          "mode": "list",
+          "cachedResultName": "akhi.the.techie@gmail.com"
+        },
+        "returnAll": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Return_All', ``, 'boolean') }}",
+        "timeMin": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('After', ``, 'string') }}",
+        "timeMax": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Before', ``, 'string') }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleCalendarTool",
+      "typeVersion": 1.3,
+      "position": [
+        1136,
+        224
+      ],
+      "id": "e4810b42-34ea-4415-9985-112d18b9cf37",
+      "name": "get events",
+      "credentials": {
+        "googleCalendarOAuth2Api": {
+          "id": "VQrikKebXzEgtSPB",
+          "name": "Akhil's calendar"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "calendar",
+        "calendar": {
+          "__rl": true,
+          "value": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Calendar', ``, 'string') }}",
+          "mode": "id",
+          "__regex": "(^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\\.[a-zA-Z0-9-]+)*)"
+        },
+        "timeMin": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('After', ``, 'string') }}",
+        "timeMax": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Before', ``, 'string') }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleCalendarTool",
+      "typeVersion": 1.3,
+      "position": [
+        1264,
+        224
+      ],
+      "id": "626bbafc-88d3-4dd7-b754-0c71804a6470",
+      "name": "check availability",
+      "credentials": {
+        "googleCalendarOAuth2Api": {
+          "id": "VQrikKebXzEgtSPB",
+          "name": "Akhil's calendar"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "delete",
+        "calendar": {
+          "__rl": true,
+          "value": "akhi.the.techie@gmail.com",
+          "mode": "list",
+          "cachedResultName": "akhi.the.techie@gmail.com"
+        },
+        "eventId": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Event_ID', ``, 'string') }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleCalendarTool",
+      "typeVersion": 1.3,
+      "position": [
+        1392,
+        224
+      ],
+      "id": "baae0be4-b926-482d-84ee-98a7c7961b72",
+      "name": "delete event",
+      "credentials": {
+        "googleCalendarOAuth2Api": {
+          "id": "VQrikKebXzEgtSPB",
+          "name": "Akhil's calendar"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "calendar": {
+          "__rl": true,
+          "value": "akhi.the.techie@gmail.com",
+          "mode": "list",
+          "cachedResultName": "akhi.the.techie@gmail.com"
+        },
+        "eventId": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Event_ID', ``, 'string') }}",
+        "updateFields": {
+          "description": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Description', ``, 'string') }}",
+          "summary": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Summary', ``, 'string') }}"
+        }
+      },
+      "type": "n8n-nodes-base.googleCalendarTool",
+      "typeVersion": 1.3,
+      "position": [
+        1520,
+        224
+      ],
+      "id": "37df0ec5-b2b5-49ff-b5e1-25bbd738ff10",
+      "name": "update an event",
+      "credentials": {
+        "googleCalendarOAuth2Api": {
+          "id": "VQrikKebXzEgtSPB",
+          "name": "Akhil's calendar"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.dateTimeTool",
+      "typeVersion": 2,
+      "position": [
+        1648,
+        224
+      ],
+      "id": "f1a94369-6736-4787-ac4e-f6ab6280c5c5",
+      "name": "Date & Time"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.fireflies.ai/graphql",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer API_KEY"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "{\n  \"query\": \"query($keyword: String, $limit: Int) { transcripts(keyword: $keyword, limit: $limit) { id title date } }\",\n  \"variables\": {\n    \"keyword\": \"Weekly sync\",\n    \"limit\": 5\n  }\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequestTool",
+      "typeVersion": 4.4,
+      "position": [
+        2032,
+        224
+      ],
+      "id": "9186399e-7f65-40f0-84d9-0a4ca85aca54",
+      "name": "transcripts"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.fireflies.ai/graphql",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer API_KEY"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('JSON', ``, 'json') }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequestTool",
+      "typeVersion": 4.4,
+      "position": [
+        2160,
+        224
+      ],
+      "id": "017c2d9b-d840-4a8f-a56a-65dde6d956ae",
+      "name": "transcript"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When chat message received": {
+      "main": [
+        [
+          {
+            "node": "Master Orchestrator",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Email Agent tool",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "Email Agent tool",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "send email": {
+      "ai_tool": [
+        [
+          {
+            "node": "Email Agent tool",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "read emails": {
+      "ai_tool": [
+        [
+          {
+            "node": "Email Agent tool",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "draft email": {
+      "ai_tool": [
+        [
+          {
+            "node": "Email Agent tool",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "delete email": {
+      "ai_tool": [
+        [
+          {
+            "node": "Email Agent tool",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "reply email": {
+      "ai_tool": [
+        [
+          {
+            "node": "Email Agent tool",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Master Orchestrator",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory1": {
+      "ai_memory": [
+        [
+          {
+            "node": "Master Orchestrator",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Email Agent tool": {
+      "ai_tool": [
+        [
+          {
+            "node": "Master Orchestrator",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Calendar Agent": {
+      "ai_tool": [
+        [
+          {
+            "node": "Master Orchestrator",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model2": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Calendar Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory2": {
+      "ai_memory": [
+        [
+          {
+            "node": "Calendar Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model3": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Meetings Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory3": {
+      "ai_memory": [
+        [
+          {
+            "node": "Meetings Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Meetings Agent": {
+      "ai_tool": [
+        [
+          {
+            "node": "Master Orchestrator",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "create event": {
+      "ai_tool": [
+        [
+          {
+            "node": "Calendar Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "get events": {
+      "ai_tool": [
+        [
+          {
+            "node": "Calendar Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "check availability": {
+      "ai_tool": [
+        [
+          {
+            "node": "Calendar Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "delete event": {
+      "ai_tool": [
+        [
+          {
+            "node": "Calendar Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "update an event": {
+      "ai_tool": [
+        [
+          {
+            "node": "Calendar Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Date & Time": {
+      "ai_tool": [
+        [
+          {
+            "node": "Calendar Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "transcripts": {
+      "ai_tool": [
+        [
+          {
+            "node": "Meetings Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "transcript": {
+      "ai_tool": [
+        [
+          {
+            "node": "Meetings Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "timeSavedMode": "fixed",
+    "timezone": "Asia/Kolkata",
+    "callerPolicy": "workflowsFromSameOwner",
+    "availableInMCP": false
+  },
+  "versionId": "479c1cf3-1aba-4076-9200-37f7d2a75439",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "5adcf055af070598f43d6403984bb72f646a6684587b890d0694cbc7278091f8"
+  },
+  "id": "IWlZyvTEgUthbGzx",
+  "tags": []
+}
