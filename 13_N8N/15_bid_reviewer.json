@@ -1,0 +1,280 @@
+{
+  "name": "15_bid_reviewer",
+  "nodes": [
+    {
+      "parameters": {
+        "fileSelector": "/home/node/.n8n-files/bids.txt",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.readWriteFile",
+      "typeVersion": 1.1,
+      "position": [
+        -784,
+        -64
+      ],
+      "id": "df8fe05f-3f1e-4043-84e1-b453b4be977e",
+      "name": "Read/Write Files from Disk"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -1008,
+        -64
+      ],
+      "id": "fc1f2e24-4082-45df-be2b-1858b898300d",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "operation": "sanitize",
+        "text": "={{ $json.data }}",
+        "guardrails": {
+          "pii": {
+            "value": {
+              "type": "all"
+            }
+          }
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.guardrails",
+      "typeVersion": 2,
+      "position": [
+        -336,
+        -64
+      ],
+      "id": "831591c1-33e0-44ba-b429-628fdd628784",
+      "name": "Guardrails"
+    },
+    {
+      "parameters": {
+        "operation": "text",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.extractFromFile",
+      "typeVersion": 1.1,
+      "position": [
+        -560,
+        -64
+      ],
+      "id": "1c789efd-92cd-4063-8f73-3e352f4031e0",
+      "name": "Extract from File"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "b82ffa26-7c00-48da-b0af-cf90c938876c",
+              "leftValue": "={{ $json.checks[0].triggered }}",
+              "rightValue": true,
+              "operator": {
+                "type": "boolean",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        -128,
+        -64
+      ],
+      "id": "9ae1de98-3eeb-411a-8c54-612f72567238",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "operation": "sendAndWait",
+        "message": "Sorry, Personally Identifiable Information (PII) detected.\n\nWorkflow will stop. Please acknowledge.",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chat",
+      "typeVersion": 1.1,
+      "position": [
+        80,
+        -160
+      ],
+      "id": "9de3224c-85b1-40c3-a24b-86b7fa19ef8d",
+      "name": "Chat",
+      "webhookId": "4d52cf57-0e14-41a7-b3e6-5c417c227939"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.guardrailsInput }}",
+        "options": {
+          "systemMessage": "You are a bid analysis/management expert.\n\nAnalyze the bids submitted by the various companies. Tell us which one is the best. Use the following evaluation parameters:\n1. Effectiveness of the proposed solution\n2. Cost\n3. Support\n4. Depth of understanding\n5. Clarity of legal terms.\n\nYour response should be in the following format:\n\nBest Bidder Name:\n5 Reasons:"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        80,
+        32
+      ],
+      "id": "67deb001-0915-4914-a8fc-6a40b445be87",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-4o-mini",
+          "mode": "list",
+          "cachedResultName": "gpt-4o-mini"
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.3,
+      "position": [
+        80,
+        224
+      ],
+      "id": "59e35b86-b631-4fad-a986-0b785f779220",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "GeI7Virag7d1KfMW",
+          "name": "OpenAi account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "newdelthis@gmail.com",
+        "subject": "Best Bid",
+        "message": "={{ $json.output }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        432,
+        32
+      ],
+      "id": "e2f831c2-29eb-4a00-87b4-8270065d98f0",
+      "name": "Send a message",
+      "webhookId": "8d420fcd-fd45-45cc-a69a-61627dcead79",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "LMedC1Cba6iLoS4B",
+          "name": "ekahate-gmail"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Read/Write Files from Disk": {
+      "main": [
+        [
+          {
+            "node": "Extract from File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "Read/Write Files from Disk",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Guardrails": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract from File": {
+      "main": [
+        [
+          {
+            "node": "Guardrails",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Chat",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "cb7d6b28-68fc-4ccb-b894-6b27631c608c",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "553512e943ba7f04a9be8c6564bdf53e99760923ce4f54ddfd89c7039f74c3d7"
+  },
+  "id": "K-uzOPbqthejKIhtWx-7r",
+  "tags": []
+}

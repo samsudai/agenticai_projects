@@ -1,0 +1,682 @@
+{
+  "name": "13_accounts",
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -1136,
+        336
+      ],
+      "id": "03bcc928-ab83-4ca4-bc59-c99f296e5e3e",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "operation": "download",
+        "fileId": {
+          "__rl": true,
+          "value": "1feLz4Qi3QeyWvSKTjLjOLa8oggz9BSHk",
+          "mode": "list",
+          "cachedResultName": "Trial Balance - AI.xlsx",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1feLz4Qi3QeyWvSKTjLjOLa8oggz9BSHk/edit?usp=drivesdk&ouid=102206556002164350779&rtpof=true&sd=true"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        -912,
+        336
+      ],
+      "id": "899df8a4-64d1-4ff8-94a8-45b585f007a0",
+      "name": "Download file",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "JF3wwv8rO2wL7e4x",
+          "name": "ekahate-oauth"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.data }}",
+        "options": {
+          "systemMessage": "Summarize this Trial Balance into a P&L. Do not explain your steps, just give me the final table.\n\n"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        -240,
+        -16
+      ],
+      "id": "7b39e731-36fc-4f52-a857-becdac912d1d",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "operation": "xlsx",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.extractFromFile",
+      "typeVersion": 1.1,
+      "position": [
+        -688,
+        336
+      ],
+      "id": "faa41e61-b3d1-4195-b76f-61093ebb578d",
+      "name": "Extract from File"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-4o-mini",
+          "mode": "list",
+          "cachedResultName": "gpt-4o-mini"
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.3,
+      "position": [
+        -176,
+        208
+      ],
+      "id": "9ed8d353-20ef-4171-b914-33a0e4c6b238",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "GeI7Virag7d1KfMW",
+          "name": "OpenAi account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "aggregate": "aggregateAllItemData",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.aggregate",
+      "typeVersion": 1,
+      "position": [
+        -464,
+        336
+      ],
+      "id": "b2f6bf90-b537-4fad-b9f9-84cbadc13f9d",
+      "name": "Aggregate"
+    },
+    {
+      "parameters": {
+        "operation": "createFromText",
+        "content": "={{ $json.output }}",
+        "name": "P&L",
+        "driveId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "My Drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "value": "1WZTYhw8gCa00k4aR8qaHlylCfrkXFEC6",
+          "mode": "list",
+          "cachedResultName": "accounts",
+          "cachedResultUrl": "https://drive.google.com/drive/folders/1WZTYhw8gCa00k4aR8qaHlylCfrkXFEC6"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        176,
+        96
+      ],
+      "id": "8f3974c7-1191-440c-849d-7696b8ebe2bc",
+      "name": "Create file from text",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "JF3wwv8rO2wL7e4x",
+          "name": "ekahate-oauth"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.data }}",
+        "options": {
+          "systemMessage": "You are an expert accountant. You understand all accounting rules, account types, principles. You ensure accuracy of your work.\n\nTake the earlier trial balance and give me balance sheet. \n\nTotal of (Liability, current year profits, and equity) should match with the total assets. Make sure that all your sub-totals and grand total are correctly computed.\n\n\nDo not provide any other details, thoughts, or explanations. Just the balance sheet.\n\n"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        -240,
+        544
+      ],
+      "id": "52193ce6-fce0-46ae-a6e8-92318597916b",
+      "name": "AI Agent1"
+    },
+    {
+      "parameters": {
+        "operation": "createFromText",
+        "content": "={{ $json.output }}",
+        "name": "balance_sheet",
+        "driveId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "My Drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "value": "1WZTYhw8gCa00k4aR8qaHlylCfrkXFEC6",
+          "mode": "list",
+          "cachedResultName": "accounts",
+          "cachedResultUrl": "https://drive.google.com/drive/folders/1WZTYhw8gCa00k4aR8qaHlylCfrkXFEC6"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        176,
+        384
+      ],
+      "id": "e4418c69-5f7a-446d-9e30-5ddfbc15a574",
+      "name": "Create file from text1",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "JF3wwv8rO2wL7e4x",
+          "name": "ekahate-oauth"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.output }}",
+        "options": {
+          "systemMessage": "Use the balance sheet and do balance sheet ratio analysis. Output only analysis details of the ratios. Do not add any other thoughts, messages, etc"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        112,
+        688
+      ],
+      "id": "4b41b5b5-0aab-4b99-abb8-2a994e4d656c",
+      "name": "AI Agent2"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-4o-mini",
+          "mode": "list",
+          "cachedResultName": "gpt-4o-mini"
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.3,
+      "position": [
+        192,
+        912
+      ],
+      "id": "dbb80520-3d80-49dc-82f3-56fb5b924e0b",
+      "name": "OpenAI Chat Model2",
+      "credentials": {
+        "openAiApi": {
+          "id": "GeI7Virag7d1KfMW",
+          "name": "OpenAi account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "fileFolder",
+        "queryString": "accounts",
+        "returnAll": true,
+        "filter": {},
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        464,
+        688
+      ],
+      "id": "66ffc31d-b8df-4b53-9ad7-bc14c7b544d5",
+      "name": "Search files and folders",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "JF3wwv8rO2wL7e4x",
+          "name": "ekahate-oauth"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "fileFolder",
+        "searchMethod": "query",
+        "queryString": "='{{ $json.id }}' in parents and trashed = false",
+        "returnAll": true,
+        "filter": {},
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        688,
+        688
+      ],
+      "id": "14ccd1df-5945-4a7f-9cf8-3812f5d62436",
+      "name": "Search files and folders1",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "JF3wwv8rO2wL7e4x",
+          "name": "ekahate-oauth"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "download",
+        "fileId": {
+          "__rl": true,
+          "value": "={{ $json.id }}",
+          "mode": "id"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        912,
+        688
+      ],
+      "id": "9519b2c4-b4dd-4ac2-9a75-0ba98139c01a",
+      "name": "Download file1",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "JF3wwv8rO2wL7e4x",
+          "name": "ekahate-oauth"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{$json}}",
+        "options": {
+          "systemMessage": "You are a financial analyst. Based on the financial documents, write a management summary.\n\nIgnore trial balance/any other non readable text.\n\nDo not write your thoughts or anything about the intermediate steps/processing.\n\nWhile calculating debt to equity ratio, only consider interest-bearing debt and do not consider other debts.\n\nExpected output format (a SINGLE BLOCK only):\n*** Management Summary Start ***\nFinancial Performance (P&L)\nCurrent Financial Position (Balance Sheet)\nInterpretation of Key Ratios (Key Ratios)\n*** Management Summary End ***\n\n"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        1584,
+        688
+      ],
+      "id": "dcde651d-68f5-4cba-a59f-4c4a6bc59417",
+      "name": "AI Agent3"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-4o-mini",
+          "mode": "list",
+          "cachedResultName": "gpt-4o-mini"
+        },
+        "builtInTools": {},
+        "options": {
+          "textFormat": {
+            "textOptions": {
+              "type": "json_schema",
+              "schema": "{\n  \"type\": \"object\",\n  \"additionalProperties\": false,\n  \"properties\": {\n    \"management_summary\": {\n      \"type\": \"object\",\n      \"additionalProperties\": false,\n      \"properties\": {\n        \"financial_performance_last_accounting_period\": {\n          \"type\": \"string\"\n        },\n        \"current_financial_position_of_the_company\": {\n          \"type\": \"string\"\n        },\n        \"key_ratios_interpretation\": {\n          \"type\": \"string\"\n        }\n      },\n      \"required\": [\n        \"financial_performance_last_accounting_period\",\n        \"current_financial_position_of_the_company\",\n        \"key_ratios_interpretation\"\n      ]\n    }\n  },\n  \"required\": [\"management_summary\"]\n}",
+              "strict": true
+            }
+          }
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.3,
+      "position": [
+        1664,
+        912
+      ],
+      "id": "270064a5-c4a1-46b6-9e99-2aa598a0c98b",
+      "name": "OpenAI Chat Model3",
+      "credentials": {
+        "openAiApi": {
+          "id": "GeI7Virag7d1KfMW",
+          "name": "OpenAi account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "createFromText",
+        "content": "={{ $json.output }}",
+        "name": "management_summary",
+        "driveId": {
+          "__rl": true,
+          "value": "My Drive",
+          "mode": "list",
+          "cachedResultName": "My Drive",
+          "cachedResultUrl": "https://drive.google.com/drive/my-drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "value": "1WZTYhw8gCa00k4aR8qaHlylCfrkXFEC6",
+          "mode": "list",
+          "cachedResultName": "accounts",
+          "cachedResultUrl": "https://drive.google.com/drive/folders/1WZTYhw8gCa00k4aR8qaHlylCfrkXFEC6"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        1936,
+        688
+      ],
+      "id": "b9d5a73b-80dd-42f0-bcd5-ea36cb2004cc",
+      "name": "Create file from text2",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "JF3wwv8rO2wL7e4x",
+          "name": "ekahate-oauth"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "aggregate": "aggregateAllItemData",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.aggregate",
+      "typeVersion": 1,
+      "position": [
+        1360,
+        688
+      ],
+      "id": "38fc6cfe-822d-493c-8118-962b02d36130",
+      "name": "Aggregate1"
+    },
+    {
+      "parameters": {
+        "operation": "text",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.extractFromFile",
+      "typeVersion": 1.1,
+      "position": [
+        1136,
+        688
+      ],
+      "id": "7970b4cf-4866-4111-adb2-b108be905709",
+      "name": "Extract from File1"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "claude-opus-4-6",
+          "mode": "list",
+          "cachedResultName": "Claude Opus 4.6"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatAnthropic",
+      "typeVersion": 1.3,
+      "position": [
+        -176,
+        768
+      ],
+      "id": "bacdd494-2037-4204-8548-6c7d5ca7887d",
+      "name": "Anthropic Chat Model",
+      "credentials": {
+        "anthropicApi": {
+          "id": "G7DwxoNXgov42yvV",
+          "name": "Anthropic account 2"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "Download file",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Download file": {
+      "main": [
+        [
+          {
+            "node": "Extract from File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract from File": {
+      "main": [
+        [
+          {
+            "node": "Aggregate",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Aggregate": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "AI Agent1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Create file from text",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create file from text": {
+      "main": [
+        []
+      ]
+    },
+    "AI Agent1": {
+      "main": [
+        [
+          {
+            "node": "Create file from text1",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "AI Agent2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create file from text1": {
+      "main": [
+        []
+      ]
+    },
+    "OpenAI Chat Model2": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent2",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent2": {
+      "main": [
+        [
+          {
+            "node": "Search files and folders",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Search files and folders": {
+      "main": [
+        [
+          {
+            "node": "Search files and folders1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Search files and folders1": {
+      "main": [
+        [
+          {
+            "node": "Download file1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Download file1": {
+      "main": [
+        [
+          {
+            "node": "Extract from File1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model3": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent3",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent3": {
+      "main": [
+        [
+          {
+            "node": "Create file from text2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create file from text2": {
+      "main": [
+        []
+      ]
+    },
+    "Aggregate1": {
+      "main": [
+        [
+          {
+            "node": "AI Agent3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract from File1": {
+      "main": [
+        [
+          {
+            "node": "Aggregate1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Anthropic Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent1",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "7415fd03-b282-4969-8ff8-55ec95b3eb41",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "553512e943ba7f04a9be8c6564bdf53e99760923ce4f54ddfd89c7039f74c3d7"
+  },
+  "id": "DMhIRka-zrlf7q4Lzay57",
+  "tags": []
+}

@@ -1,0 +1,218 @@
+{
+  "name": "12_hr_recruitment",
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "91f462b6-851c-4960-87e0-401f1935bd0e",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "fileSelector": "/home/node/.n8n-files/candidates.json",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.readWriteFile",
+      "typeVersion": 1.1,
+      "position": [
+        208,
+        0
+      ],
+      "id": "0050f8af-2345-4c5b-ab98-a1d1f1835ab9",
+      "name": "Read/Write Files from Disk"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.data }}",
+        "hasOutputParser": true,
+        "options": {
+          "systemMessage": "You are a Planner Agent for HR candidate filtering.\n\nTask:\n- Extract candidate details: skills, experience, projects, statement\n- Summarize candidate suitability for the role 'Agentic AI Developer/Architect'\n\nVERY IMPORTANT:\n- Output MUST be valid JSON only.\n- Do NOT include any extra explanation or text.\n- Escape newlines inside strings.\n\nJSON FORMAT:\n{\n  \"Candidate\": {\n    \"name\": \"...\",\n    \"skills\": [...],\n    \"experience_years\": ...,\n    \"projects\": [...],\n    \"statement\": \"...\"\n  },\n  \"Role\": \"Agentic AI Developer/Architect\",\n  \"EvaluationFormula\": \"...\"\n}"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        640,
+        0
+      ],
+      "id": "8780b1a1-104d-47ec-b52d-6fd3080367e6",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "claude-sonnet-4-5-20250929",
+          "cachedResultName": "Claude Sonnet 4.5"
+        },
+        "options": {
+          "thinking": true
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatAnthropic",
+      "typeVersion": 1.3,
+      "position": [
+        640,
+        176
+      ],
+      "id": "71f3cecb-16c7-49c9-9f3d-32d5070b1e02",
+      "name": "Anthropic Chat Model1",
+      "credentials": {
+        "anthropicApi": {
+          "id": "L2MjPCU3APXKl0Qu",
+          "name": "Anthropic account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsonSchemaExample": "{\n  \"Applicant\": {\"name\": \"...\", \"marks\": \"...\", \"interview_score\": \"...\", \"statement\": \"...\"},\n  \"Program\": {\"name\": \"...\", \"cutoff_marks\": \"...\"},\n  \"Eligibility\": {\"status\": \"...\", \"reason\": \"...\"},\n  \"Decision\": \"...\",\n  \"Justification\": \"...\"\n}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.3,
+      "position": [
+        784,
+        176
+      ],
+      "id": "fa46f9f0-980e-4712-aca1-9abd56c38d53",
+      "name": "Structured Output Parser"
+    },
+    {
+      "parameters": {
+        "operation": "fromJson",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.extractFromFile",
+      "typeVersion": 1.1,
+      "position": [
+        416,
+        0
+      ],
+      "id": "977def62-a29d-4bb7-b40d-429252380846",
+      "name": "Extract from File"
+    },
+    {
+      "parameters": {
+        "operation": "createFromText",
+        "content": "={{ JSON.stringify($json.output, null, 2) }}",
+        "name": "hr-recruitment-decisions",
+        "driveId": {
+          "__rl": true,
+          "value": "My Drive",
+          "mode": "list",
+          "cachedResultName": "My Drive",
+          "cachedResultUrl": "https://drive.google.com/drive/my-drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "value": "root",
+          "mode": "list"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        992,
+        0
+      ],
+      "id": "84792c64-d721-4071-88e8-56e0e68de236",
+      "name": "Create file from text",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "dLwq2uXe8V30gayT",
+          "name": "ekahate-gdrive"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "Read/Write Files from Disk",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Read/Write Files from Disk": {
+      "main": [
+        [
+          {
+            "node": "Extract from File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Anthropic Chat Model1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structured Output Parser": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract from File": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Create file from text",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "94d4cec3-086e-4cc9-93b5-25aa33bdf2a6",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "553512e943ba7f04a9be8c6564bdf53e99760923ce4f54ddfd89c7039f74c3d7"
+  },
+  "id": "y1aTBMRqN1_Z5PAT4yq9m",
+  "tags": []
+}
